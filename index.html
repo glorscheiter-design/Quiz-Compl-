@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DIPP – Mapeamento Completo de Perfil de Imagem</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E2C97E;
+    --gold-dim: #8C6E2F;
+    --black: #0B0B0B;
+    --black-2: #141414;
+    --black-3: #1E1E1E;
+    --white: #F5F0E8;
+    --white-dim: #B8B0A0;
+    --border: rgba(201,168,76,0.22);
+    --border-hover: rgba(201,168,76,0.6);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: flex; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .screen.active { animation: fadeUp .5s ease both; }
+
+  /* ─── ORNAMENTO ─── */
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim));
+  }
+  .ornament::after { background: linear-gradient(to left, transparent, var(--gold-dim)); }
+
+  /* ─── INTRO ─── */
+  #screen-intro {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .circle-bg {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.06);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .brand-label {
+    font-size: 10px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 48px;
+    position: relative;
+  }
+
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 7vw, 68px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .intro-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .intro-sub {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--white-dim);
+    text-transform: uppercase;
+    margin-bottom: 44px;
+    position: relative;
+  }
+
+  .intro-line {
+    width: 48px; height: 1px;
+    background: var(--gold);
+    margin: 0 auto 36px;
+    opacity: .45;
+    position: relative;
+  }
+
+  .intro-desc {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--white-dim);
+    max-width: 500px;
+    margin: 0 auto 52px;
+    position: relative;
+  }
+
+  .intro-meta {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold-dim);
+    margin-top: 20px;
+    position: relative;
+  }
+
+  /* ─── BOTÕES ─── */
+  .btn-gold {
+    display: inline-block;
+    padding: 16px 52px;
+    border: 1px solid var(--gold);
+    color: var(--black);
+    background: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .28s ease;
+    position: relative;
+  }
+  .btn-gold:hover {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: translateY(-2px);
+  }
+  .btn-gold:disabled {
+    opacity: .35;
+    pointer-events: none;
+  }
+
+  .btn-outline {
+    display: inline-block;
+    padding: 14px 40px;
+    border: 1px solid var(--border);
+    color: var(--gold);
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .28s ease;
+  }
+  .btn-outline:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+
+  /* ─── QUIZ ─── */
+  #screen-quiz {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+
+  .quiz-wrapper { width: 100%; max-width: 700px; }
+
+  .progress-track {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+    margin-bottom: 52px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 1px;
+    background: var(--gold);
+    transition: width .45s ease;
+  }
+  .progress-meta {
+    position: absolute;
+    right: 0; top: 10px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+  }
+
+  .q-num {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3.5vw, 34px);
+    font-weight: 300;
+    line-height: 1.3;
+    color: var(--white);
+    margin-bottom: 40px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 11px; }
+
+  .opt {
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    background: var(--black-2);
+    cursor: pointer;
+    transition: all .22s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .opt:hover {
+    border-color: var(--border-hover);
+    background: var(--black-3);
+    transform: translateX(5px);
+  }
+  .opt.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.07);
+  }
+
+  .opt-letter {
+    min-width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; letter-spacing: 1px;
+    color: var(--gold-dim);
+    flex-shrink: 0;
+    transition: all .22s;
+    margin-top: 1px;
+  }
+  .opt.selected .opt-letter {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.12);
+  }
+
+  .opt-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--white-dim);
+    font-weight: 400;
+  }
+  .opt.selected .opt-text { color: var(--white); }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+  }
+
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    transition: background .3s;
+  }
+  .nav-dot.done { background: var(--gold-dim); }
+  .nav-dot.current { background: var(--gold); }
+
+  /* ─── LEAD ─── */
+  #screen-lead {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .lead-wrapper { max-width: 480px; width: 100%; }
+
+  .lead-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 300;
+    line-height: 1.15;
+    margin: 28px 0 14px;
+  }
+  .lead-sub {
+    font-size: 14px;
+    color: var(--white-dim);
+    line-height: 1.75;
+    margin-bottom: 44px;
+  }
+
+  .form-group { margin-bottom: 14px; text-align: left; }
+  .form-group label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 8px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--black-2);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 300;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input::placeholder { color: rgba(255,255,255,0.18); }
+  .form-group input:focus { border-color: var(--gold); }
+
+  .form-error { color: #c0392b; font-size: 12px; margin-top: 8px; display: none; }
+
+  .privacy {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    margin-top: 18px;
+    line-height: 1.6;
+  }
+
+  /* ─── RESULTADO ─── */
+  #screen-result {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 70px 24px;
+    text-align: center;
+  }
+
+  .result-wrapper { max-width: 640px; width: 100%; }
+
+  .result-eyebrow {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .result-profile-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6.5vw, 60px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .result-profile-name em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .result-icon {
+    font-size: 32px;
+    margin: 28px 0 20px;
+    display: block;
+  }
+
+  .result-line {
+    width: 40px; height: 1px;
+    background: var(--gold);
+    margin: 28px auto;
+    opacity: .5;
+  }
+
+  .result-desc {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--white-dim);
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .result-fear {
+    border: 1px solid var(--border);
+    background: var(--black-2);
+    padding: 22px 28px;
+    margin: 28px 0;
+    text-align: left;
+  }
+  .result-fear-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 10px;
+  }
+  .result-fear-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--gold-light);
+    line-height: 1.4;
+  }
+
+  .result-needs {
+    border: 1px solid var(--border);
+    background: var(--black-2);
+    padding: 28px 32px;
+    margin: 20px 0;
+    text-align: left;
+  }
+  .result-needs-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 18px;
+  }
+  .result-needs ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .result-needs ul li {
+    font-size: 14px;
+    color: var(--white-dim);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .result-needs ul li::before {
+    content: '—';
+    position: absolute; left: 0;
+    color: var(--gold-dim);
+  }
+
+  .result-cta-section { margin-top: 44px; }
+  .result-cta-text {
+    font-size: 15px;
+    color: var(--white-dim);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+
+  .btn-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    font-size: 10px;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<section id="screen-intro" class="screen active">
+  <div class="circle-bg" style="width:500px;height:500px;"></div>
+  <div class="circle-bg" style="width:800px;height:800px;"></div>
+  <div class="circle-bg" style="width:1100px;height:1100px;"></div>
+
+  <p class="brand-label">Mapeamento Completo de Perfil de Imagem™</p>
+
+  <h1 class="intro-title">
+    Qual é o seu<br><em>perfil de imagem?</em>
+  </h1>
+  <p class="intro-sub">Diagnóstico · Comportamento · Identidade</p>
+
+  <div class="intro-line"></div>
+
+  <p class="intro-desc">
+    Este não é um quiz sobre roupa.<br>
+    É um diagnóstico sobre como você decide, como se vê e onde trava — aplicado à sua imagem.<br><br>
+    Em menos de 4 minutos, descubra seu perfil e o que ele revela sobre você.
+  </p>
+
+  <button class="btn-gold" onclick="startQuiz()">Iniciar mapeamento</button>
+  <p class="intro-meta">10 perguntas · resultado imediato · 100% gratuito</p>
+</section>
+
+<!-- ═══ QUIZ ═══ -->
+<section id="screen-quiz" class="screen">
+  <div class="quiz-wrapper">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      <span class="progress-meta" id="progress-meta">01 / 10</span>
+    </div>
+
+    <p class="q-num" id="q-num">Pergunta 01</p>
+    <h2 class="q-text" id="q-text"></h2>
+
+    <div class="options" id="options"></div>
+
+    <div class="quiz-nav">
+      <div class="nav-dots" id="nav-dots"></div>
+      <button class="btn-gold" id="btn-next" onclick="nextQ()" disabled>
+        Próxima &nbsp;→
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LEAD ═══ -->
+<section id="screen-lead" class="screen">
+  <div class="lead-wrapper">
+    <div class="ornament">Mapeamento Completo</div>
+    <h2 class="lead-title">Seu diagnóstico<br><em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold-light);">está pronto.</em></h2>
+    <p class="lead-sub">Preencha seus dados para receber seu perfil completo — com análise comportamental, seus padrões de imagem e o caminho mais direto para a transformação.</p>
+
+    <div class="form-group">
+      <label>Seu nome</label>
+      <input type="text" id="lead-name" placeholder="Como prefere ser chamada?" />
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="lead-email" placeholder="seu@email.com" />
+    </div>
+    <div class="form-group">
+      <label>WhatsApp <span style="color:rgba(255,255,255,0.18);font-size:9px;">(opcional)</span></label>
+      <input type="tel" id="lead-phone" placeholder="(00) 00000-0000" />
+    </div>
+    <p class="form-error" id="form-error">Por favor, preencha nome e e-mail para continuar.</p>
+
+    <br/>
+    <button class="btn-gold" onclick="showResult()" style="width:100%;text-align:center;">
+      Ver meu resultado →
+    </button>
+
+    <p class="privacy">Seus dados são confidenciais e utilizados apenas para envio do diagnóstico. Sem spam.</p>
+  </div>
+</section>
+
+<!-- ═══ RESULTADO ═══ -->
+<section id="screen-result" class="screen">
+  <div class="result-wrapper">
+    <div class="ornament">Perfil Identificado</div>
+    <br/>
+    <p class="result-eyebrow" id="r-eyebrow"></p>
+    <h2 class="result-profile-name" id="r-name"></h2>
+    <span class="result-icon" id="r-icon"></span>
+
+    <div class="result-line"></div>
+
+    <p class="result-desc" id="r-desc"></p>
+    <p class="result-desc" id="r-desc2"></p>
+
+    <div class="result-fear">
+      <p class="result-fear-label">Seu medo central</p>
+      <p class="result-fear-text" id="r-fear"></p>
+    </div>
+
+    <div class="result-needs">
+      <p class="result-needs-label">O que você precisa agora</p>
+      <ul id="r-needs"></ul>
+    </div>
+
+    <div class="result-cta-section">
+      <p class="result-cta-text" id="r-cta"></p>
+      <div class="btn-row">
+        <button class="btn-gold" onclick="openWhatsApp()">Quero minha sessão de diagnóstico →</button>
+        <button class="btn-outline" onclick="restartQuiz()">Refazer o mapeamento</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© Mapeamento Completo de Perfil de Imagem™</footer>
+
+<script>
+const WHATSAPP_NUMBER = "5500000000000"; // ← substitua pelo seu número
+
+const questions = [
+  {
+    text: "Quando você se olha no espelho antes de sair, o que costuma acontecer?",
+    opts: [
+      { text: "Observo muitos detalhes e fico pensando se algo está errado.", p: "A" },
+      { text: "Olho rápido, decido e sigo — mas às vezes depois sinto que poderia ter escolhido melhor.", p: "B" },
+      { text: "Sinto que a imagem que vejo não combina completamente com quem eu sou hoje.", p: "C" },
+    ]
+  },
+  {
+    text: "O que mais aparece na sua relação com a imagem hoje?",
+    opts: [
+      { text: "Insegurança sobre estar adequada.", p: "A" },
+      { text: "Oscilação: alguns dias me sinto bem, outros completamente perdida.", p: "B" },
+      { text: "A sensação de que minha imagem ficou antiga para a mulher que me tornei.", p: "C" },
+    ]
+  },
+  {
+    text: "Na hora de comprar roupas, você tende a:",
+    opts: [
+      { text: "Pensar muito antes de decidir e ter medo de comprar errado.", p: "A" },
+      { text: "Comprar por impulso quando gosto de algo — mas depois nem sempre uso.", p: "B" },
+      { text: "Procurar peças que façam sentido com uma nova fase, mas nem sempre sei quais são.", p: "C" },
+    ]
+  },
+  {
+    text: "O que mais te trava ao se vestir?",
+    opts: [
+      { text: "O medo de parecer inadequada.", p: "A" },
+      { text: "A falta de constância para manter uma imagem alinhada.", p: "B" },
+      { text: "A dúvida sobre qual imagem representa minha fase atual.", p: "C" },
+    ]
+  },
+  {
+    text: "Quando alguém elogia sua imagem, você:",
+    opts: [
+      { text: "Agradece, mas por dentro ainda duvida se está realmente boa.", p: "A" },
+      { text: "Fica feliz e tenta repetir aquela fórmula depois.", p: "B" },
+      { text: "Sente que o elogio é bom, mas nem sempre traduz quem você gostaria de comunicar.", p: "C" },
+    ]
+  },
+  {
+    text: "Sobre pedir opinião para outras pessoas sobre sua aparência, você:",
+    opts: [
+      { text: "Pede com frequência — sinto que preciso de confirmação.", p: "A" },
+      { text: "Pede às vezes, principalmente quando está com pressa ou indecisa.", p: "B" },
+      { text: "Pede quando sente que está em uma fase de mudança e quer entender como está sendo percebida.", p: "C" },
+    ]
+  },
+  {
+    text: "Quando abre o guarda-roupa, qual sensação aparece mais?",
+    opts: [
+      { text: "Tenho opções, mas não sei se elas estão certas para mim.", p: "A" },
+      { text: "Tenho coisas, mas acabo usando sempre as mesmas.", p: "B" },
+      { text: "Tenho peças que já fizeram sentido, mas hoje não parecem mais me representar.", p: "C" },
+    ]
+  },
+  {
+    text: "Quando tenta mudar algo na imagem, geralmente:",
+    opts: [
+      { text: "Pesquiso muito, salvo referências — e demoro para colocar em prática.", p: "A" },
+      { text: "Começo animada, mas perco continuidade.", p: "B" },
+      { text: "Percebo que não quero apenas mudar roupa — quero expressar uma nova fase.", p: "C" },
+    ]
+  },
+  {
+    text: "Ao pensar em melhorar sua imagem, você sente:",
+    opts: [
+      { text: "Insegurança — não quero errar no processo.", p: "A" },
+      { text: "Ansiedade — quero ver resultado logo.", p: "B" },
+      { text: "Confusão — sinto que preciso me reencontrar visualmente.", p: "C" },
+    ]
+  },
+  {
+    text: "Qual frase mais representa você hoje?",
+    opts: [
+      { text: "\"Eu quero melhorar, mas tenho medo de errar.\"", p: "A" },
+      { text: "\"Eu até tento mudar, mas não consigo manter.\"", p: "B" },
+      { text: "\"Eu sinto que mudei, mas minha imagem não acompanhou.\"", p: "C" },
+    ]
+  },
+];
+
+const profiles = {
+  A: {
+    eyebrow: "Perfil Mapeado",
+    name: "A Analítica\n<em>Insegura</em>",
+    icon: "🧠",
+    desc: "Você se importa muito com a imagem — e é exatamente isso que torna o processo mais difícil. A alta autocrítica, a busca por perfeição e o medo constante de julgamento criam um ciclo onde você pensa muito, sente muito — mas age pouco.",
+    desc2: "Você não é desleixada. Pelo contrário: você salva referências, observa detalhes, pede opinião. O problema é que tudo isso vira paralisia. Você acredita que precisa 'acertar antes de aparecer'.",
+    fear: '"E se eu fizer errado?"',
+    needs: [
+      "Limite de opções — menos escolhas, mais clareza.",
+      "Direção clara e passo a passo estruturado.",
+      "Validação inicial com corte progressivo da dependência externa.",
+      "Um método que elimine o excesso de análise antes de agir.",
+    ],
+    cta: "Você está pronta para parar de pensar e começar a se ver de outra forma. Uma sessão de diagnóstico pode ser o começo dessa virada — sem erro, sem julgamento."
+  },
+  B: {
+    eyebrow: "Perfil Mapeado",
+    name: "A Executora\n<em>Desorganizada</em>",
+    icon: "🔥",
+    desc: "Você quer mudar, tenta mudar, começa tudo — mas não sustenta nada. Não é falta de vontade: é excesso de impulso sem estrutura. Você já tentou várias versões, já mudou várias vezes, mas ainda não encontrou a que fica.",
+    desc2: "Você é movida pela emoção — compra quando ama, muda quando se anima, abandona quando não vê resultado rápido. O que você ainda não teve foi alguém que segure o ritmo com você.",
+    fear: '"E se eu me frustrar de novo?"',
+    needs: [
+      "Estrutura e sequência — uma etapa de cada vez.",
+      "Acompanhamento que sustente o processo.",
+      "Limites que impeçam saltos e pulos de fase.",
+      "Ritmo controlado para que a mudança se torne constante.",
+    ],
+    cta: "Você já tem energia e vontade de sobra. O que faltou até agora foi a estrutura certa para sustentar. Vamos construir isso juntas — com sequência, ritmo e resultado real."
+  },
+  C: {
+    eyebrow: "Perfil Mapeado",
+    name: "A Posicionada\n<em>em Transição</em>",
+    icon: "👑",
+    desc: "Você é a cliente mais sofisticada deste mapeamento. Já tem história, já tem trajetória, já construiu algo relevante. Mas está em transição — e sua imagem ainda não acompanhou a mulher que você se tornou.",
+    desc2: "Você não vive mais entre roupas. Você vive entre duas versões de si mesma. Mantém peças antigas que já não fazem sentido, mistura o passado com o presente, e sente um conflito interno entre quem era e quem está se tornando.",
+    fear: '"E se eu perder quem eu já construí?"',
+    needs: [
+      "Segurança para assumir a nova versão sem apagar a história.",
+      "Validação da evolução que já aconteceu dentro de você.",
+      "Construção de uma narrativa visual coerente com a nova fase.",
+      "Autorização — e apoio — para mudar.",
+    ],
+    cta: "Você já evoluiu. O que falta agora é que sua imagem conte essa história. Uma sessão de diagnóstico pode ser o ponto de virada entre quem você era e quem você está se tornando."
+  }
+};
+
+let answers = [];
+let current = 0;
+let selected = null;
+
+function startQuiz() {
+  showScreen('screen-quiz');
+  renderQ();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = 'flex';
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderQ() {
+  const q = questions[current];
+  const total = questions.length;
+  const pct = (current / total) * 100;
+
+  document.getElementById('q-num').textContent = `Pergunta ${String(current+1).padStart(2,'0')}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-meta').textContent = `${String(current+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+
+  const letters = ['A','B','C'];
+  const container = document.getElementById('options');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const card = document.createElement('div');
+    card.className = 'opt';
+    card.innerHTML = `<div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt.text}</div>`;
+    card.onclick = () => selectOpt(card, opt.p);
+    container.appendChild(card);
+  });
+
+  // dots
+  const dots = document.getElementById('nav-dots');
+  dots.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i < current ? ' done' : i === current ? ' current' : '');
+    dots.appendChild(d);
+  });
+
+  selected = null;
+  const btn = document.getElementById('btn-next');
+  btn.disabled = true;
+}
+
+function selectOpt(card, profile) {
+  document.querySelectorAll('.opt').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selected = profile;
+  document.getElementById('btn-next').disabled = false;
+}
+
+function nextQ() {
+  if (!selected) return;
+  answers.push(selected);
+  current++;
+  if (current < questions.length) {
+    renderQ();
+  } else {
+    showScreen('screen-lead');
+  }
+}
+
+function showResult() {
+  const name  = document.getElementById('lead-name').value.trim();
+  const email = document.getElementById('lead-email').value.trim();
+  const err   = document.getElementById('form-error');
+
+  if (!name || !email) {
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+
+  const count = { A: 0, B: 0, C: 0 };
+  answers.forEach(a => count[a]++);
+  const top = Object.entries(count).sort((x,y) => y[1]-x[1])[0][0];
+  const p = profiles[top];
+
+  document.getElementById('r-eyebrow').textContent = p.eyebrow;
+  document.getElementById('r-name').innerHTML = p.name.replace('\n','<br>');
+  document.getElementById('r-icon').textContent = p.icon;
+  document.getElementById('r-desc').textContent = p.desc;
+  document.getElementById('r-desc2').textContent = p.desc2;
+  document.getElementById('r-fear').textContent = p.fear;
+  document.getElementById('r-cta').textContent = p.cta;
+
+  const ul = document.getElementById('r-needs');
+  ul.innerHTML = '';
+  p.needs.forEach(n => {
+    const li = document.createElement('li');
+    li.textContent = n;
+    ul.appendChild(li);
+  });
+
+  showScreen('screen-result');
+}
+
+function openWhatsApp() {
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}`, '_blank');
+}
+
+function restartQuiz() {
+  answers = []; current = 0; selected = null;
+  showScreen('screen-intro');
+}
+
+// init — hide all non-active screens
+document.querySelectorAll('.screen:not(.active)').forEach(s => s.style.display = 'none');
+</script>
+</body>
+</html>

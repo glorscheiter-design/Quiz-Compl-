@@ -807,9 +807,10 @@ function nextQ() {
   }
 }
 
-function showResult() {
+async function showResult() {
   const name  = document.getElementById('lead-name').value.trim();
   const email = document.getElementById('lead-email').value.trim();
+  const phone = document.getElementById('lead-phone').value.trim();
   const err   = document.getElementById('form-error');
 
   if (!name || !email) {
@@ -821,8 +822,32 @@ function showResult() {
   const count = { A: 0, B: 0, C: 0 };
   answers.forEach(a => count[a]++);
   const top = Object.entries(count).sort((x,y) => y[1]-x[1])[0][0];
-  const p = profiles[top];
+  const profileNames = { A: 'Analítica Insegura', B: 'Executora Desorganizada', C: 'Posicionada em Transição' };
 
+  const btn = document.querySelector('#screen-lead .btn-gold');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  try {
+    await fetch('https://formspree.io/f/xpqknrao', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        nome: name,
+        email: email,
+        whatsapp: phone || '—',
+        perfil: profileNames[top],
+        respostas: answers.join(', ')
+      })
+    });
+  } catch(e) {
+    console.warn('Formspree error:', e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Ver meu resultado →';
+
+  const p = profiles[top];
   document.getElementById('r-eyebrow').textContent = p.eyebrow;
   document.getElementById('r-name').innerHTML = p.name.replace('\n','<br>');
   document.getElementById('r-icon').textContent = p.icon;

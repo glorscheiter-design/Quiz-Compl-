@@ -829,9 +829,9 @@ async function showResult() {
   btn.textContent = 'Enviando...';
 
   try {
-    await fetch('https://formspree.io/f/xpqknrao', {
+    await fetch('https://script.google.com/macros/s/AKfycbxZg82C2Npu_QTPzOQ1OfiIwLwJj96Tf_xkBEjYLOPMprywjsppwY4ofkXmmGKUO44EYw/exec', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nome: name,
         email: email,
@@ -841,7 +841,7 @@ async function showResult() {
       })
     });
   } catch(e) {
-    console.warn('Formspree error:', e);
+    console.warn('Erro ao salvar lead:', e);
   }
 
   btn.disabled = false;

@@ -829,16 +829,17 @@ async function showResult() {
   btn.textContent = 'Enviando...';
 
   try {
+    const formData = new FormData();
+    formData.append('nome', name);
+    formData.append('email', email);
+    formData.append('whatsapp', phone || '—');
+    formData.append('perfil', profileNames[top]);
+    formData.append('respostas', answers.join(', '));
+
     await fetch('https://script.google.com/macros/s/AKfycbxZg82C2Npu_QTPzOQ1OfiIwLwJj96Tf_xkBEjYLOPMprywjsppwY4ofkXmmGKUO44EYw/exec', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome: name,
-        email: email,
-        whatsapp: phone || '—',
-        perfil: profileNames[top],
-        respostas: answers.join(', ')
-      })
+      mode: 'no-cors',
+      body: formData
     });
   } catch(e) {
     console.warn('Erro ao salvar lead:', e);

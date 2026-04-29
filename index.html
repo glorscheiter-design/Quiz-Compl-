@@ -517,7 +517,7 @@
   <div class="quiz-wrapper">
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-      <span class="progress-meta" id="progress-meta">01 / 10</span>
+      <span class="progress-meta" id="progress-meta">01 / 16</span>
     </div>
 
     <p class="q-num" id="q-num">Pergunta 01</p>
@@ -613,11 +613,27 @@ const questions = [
     ]
   },
   {
+    text: "Quando precisa escolher uma roupa para um compromisso importante, você:",
+    opts: [
+      { text: "Demora, experimenta várias opções e tem medo de errar.", p: "A" },
+      { text: "Escolhe com rapidez, mas pode mudar de ideia no último minuto.", p: "B" },
+      { text: "Fica tentando entender qual versão sua deveria aparecer naquele momento.", p: "C" },
+    ]
+  },
+  {
     text: "O que mais aparece na sua relação com a imagem hoje?",
     opts: [
       { text: "Insegurança sobre estar adequada.", p: "A" },
       { text: "Oscilação: alguns dias me sinto bem, outros completamente perdida.", p: "B" },
-      { text: "A sensação de que minha imagem ficou antiga para a mulher que me tornei.", p: "C" },
+      { text: "Sensação de que minha imagem ficou antiga para a mulher que me tornei.", p: "C" },
+    ]
+  },
+  {
+    text: "Quando alguém elogia sua imagem, você:",
+    opts: [
+      { text: "Agradece, mas por dentro ainda duvida se está realmente boa.", p: "A" },
+      { text: "Fica feliz e tenta repetir aquela fórmula depois.", p: "B" },
+      { text: "Sente que o elogio é bom, mas nem sempre traduz quem você gostaria de comunicar.", p: "C" },
     ]
   },
   {
@@ -637,17 +653,17 @@ const questions = [
     ]
   },
   {
-    text: "Quando alguém elogia sua imagem, você:",
+    text: "Quando você sente que errou no look, sua reação costuma ser:",
     opts: [
-      { text: "Agradece, mas por dentro ainda duvida se está realmente boa.", p: "A" },
-      { text: "Fica feliz e tenta repetir aquela fórmula depois.", p: "B" },
-      { text: "Sente que o elogio é bom, mas nem sempre traduz quem você gostaria de comunicar.", p: "C" },
+      { text: "Ficar me julgando e pensando no que os outros perceberam.", p: "A" },
+      { text: "Pensar: 'eu deveria ter planejado melhor'.", p: "B" },
+      { text: "Sentir que aquela roupa já não conversa mais com quem você é.", p: "C" },
     ]
   },
   {
-    text: "Sobre pedir opinião para outras pessoas sobre sua aparência, você:",
+    text: "Sobre pedir opinião para outras pessoas, você:",
     opts: [
-      { text: "Pede com frequência — sinto que preciso de confirmação.", p: "A" },
+      { text: "Pede com frequência porque sente que precisa de confirmação.", p: "A" },
       { text: "Pede às vezes, principalmente quando está com pressa ou indecisa.", p: "B" },
       { text: "Pede quando sente que está em uma fase de mudança e quer entender como está sendo percebida.", p: "C" },
     ]
@@ -661,19 +677,27 @@ const questions = [
     ]
   },
   {
-    text: "Quando tenta mudar algo na imagem, geralmente:",
+    text: "Quando pensa em melhorar sua imagem, você sente:",
     opts: [
-      { text: "Pesquiso muito, salvo referências — e demoro para colocar em prática.", p: "A" },
-      { text: "Começo animada, mas perco continuidade.", p: "B" },
-      { text: "Percebo que não quero apenas mudar roupa — quero expressar uma nova fase.", p: "C" },
+      { text: "Insegurança, porque não quer errar no processo.", p: "A" },
+      { text: "Ansiedade, porque quer ver resultado logo.", p: "B" },
+      { text: "Confusão, porque sente que precisa se reencontrar visualmente.", p: "C" },
     ]
   },
   {
-    text: "Ao pensar em melhorar sua imagem, você sente:",
+    text: "O que você mais deseja em relação à sua imagem?",
     opts: [
-      { text: "Insegurança — não quero errar no processo.", p: "A" },
-      { text: "Ansiedade — quero ver resultado logo.", p: "B" },
-      { text: "Confusão — sinto que preciso me reencontrar visualmente.", p: "C" },
+      { text: "Clareza para saber o que funciona em mim.", p: "A" },
+      { text: "Praticidade para me vestir melhor sem complicar.", p: "B" },
+      { text: "Coerência para minha imagem acompanhar minha evolução.", p: "C" },
+    ]
+  },
+  {
+    text: "Quando alguém te vê pela primeira vez, você gostaria que sua imagem transmitisse:",
+    opts: [
+      { text: "Segurança, elegância e adequação.", p: "A" },
+      { text: "Presença, energia e personalidade.", p: "B" },
+      { text: "Profundidade, maturidade e autenticidade.", p: "C" },
     ]
   },
   {
@@ -682,6 +706,30 @@ const questions = [
       { text: "\"Eu quero melhorar, mas tenho medo de errar.\"", p: "A" },
       { text: "\"Eu até tento mudar, mas não consigo manter.\"", p: "B" },
       { text: "\"Eu sinto que mudei, mas minha imagem não acompanhou.\"", p: "C" },
+    ]
+  },
+  {
+    text: "Quando você tenta mudar algo na imagem, geralmente:",
+    opts: [
+      { text: "Pesquisa muito, salva referências e demora para colocar em prática.", p: "A" },
+      { text: "Começa animada, mas perde continuidade.", p: "B" },
+      { text: "Percebe que não quer apenas mudar roupa — quer expressar uma nova fase.", p: "C" },
+    ]
+  },
+  {
+    text: "Para você, se vestir bem hoje significa:",
+    opts: [
+      { text: "Sentir segurança de que está adequada.", p: "A" },
+      { text: "Resolver a rotina com mais facilidade e presença.", p: "B" },
+      { text: "Conseguir se reconhecer na própria imagem.", p: "C" },
+    ]
+  },
+  {
+    text: "O que mais te faria sentir que sua imagem evoluiu?",
+    opts: [
+      { text: "Ter critérios claros para escolher melhor.", p: "A" },
+      { text: "Conseguir montar looks com mais rapidez e consistência.", p: "B" },
+      { text: "Sentir que sua imagem traduz a mulher que você se tornou.", p: "C" },
     ]
   },
 ];
